@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.10/dist/vue.js"></script>
+    <style>
+      * {
+        user-select: none;
+      }
+      .basic {
+        width: 300px;
+        height: 50px;
+        border: 1px solid black;
+      }
+      .happy {
+        border: 3px solid red;
+        background-color: rgba(255, 255, 0, 0.644);
+        background: linear-gradient(30deg, yellow, pink, orange, yellow);
+      }
+      .sad {
+        border: 4px dashed rgb(2, 197, 2);
+        background-color: skyblue;
+      }
+      .normal {
+        background-color: #bfa;
+      }
+      .atguigu1 {
+        background-color: yellowgreen;
+      }
+      .atguigu2 {
+        font-size: 20px;
+        text-shadow: 2px 2px 10px red;
+      }
+      .atguigu3 {
+        border-radius: 20px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- 
+        class样式
+        ● 写法：:class="xxx"，xxx 可以是字符串、数组、对象
+        ● :style="[a,b]"其中a、b是样式对象
+        ● :style="{fontSize: xxx}"其中 xxx 是动态值
+            ○ 字符串写法适用于：类名不确定，要动态获取 
+            ○ 数组写法适用于：要绑定多个样式，个数不确定，名字也不确定 
+            ○ 对象写法适用于：要绑定多个样式，个数确定，名字也确定，但不确定用不用
+     -->
+    <div id="root">
+      <!-- 绑定class样式--字符串写法，适用于：样式的类名不确定，需要动态指定 -->
+      <div class="basic" :class="mood" @click="changeMood">{{name}}</div>
+      <br /><br />
+
+      <!-- 绑定class样式--数组写法，适用于：要绑定的样式个数不确定、名字也不确定 -->
+      <div class="basic" :class="classArr">{{name}}</div>
+      <br /><br />
+
+      <!-- 绑定class样式--对象写法，适用于：要绑定的样式个数确定、名字也确定，但要动态决定用不用 -->
+      <div class="basic" :class="classObj">{{name}}</div>
+      <br /><br />
+
+      <!-- 绑定style样式--对象写法 -->
+      <div class="basic" :style="styleObj">{{name}}</div>
+      <br /><br />
+
+      <!-- 绑定style样式--数组写法 -->
+      <div class="basic" :style="styleArr">{{name}}</div>
+    </div>
+  </body>
+  <script type="text/javascript">
+    Vue.config.productionTip = false;
+
+    const vm = new Vue({
+      el: "#root",
+      data: {
+        name: "尚硅谷",
+        mood: "normal",
+        classArr: ["atguigu1", "atguigu2", "atguigu3"],
+        classObj: {
+          atguigu1: false,
+          atguigu2: false,
+        },
+        styleObj: {
+          fontSize: "40px",
+          color: "red",
+        },
+        styleObj2: {
+          backgroundColor: "orange",
+        },
+        styleArr: [
+          {
+            fontSize: "40px",
+            color: "blue",
+          },
+          {
+            backgroundColor: "gray",
+          },
+        ],
+      },
+      methods: {
+        changeMood() {
+          const arr = ["happy", "sad", "normal"];
+          const index = Math.floor(Math.random() * 3);
+          this.mood = arr[index];
+        },
+      },
+    });
+  </script>
+</html>
