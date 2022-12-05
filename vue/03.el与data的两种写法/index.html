@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.7.10/dist/vue.js"></script>
-</head>
-<body>
+  </head>
+  <body>
     <div id="root">
       <h1>你好，{{name}}</h1>
     </div>
-</body>
-<script type="text/javascript">
-    Vue.config.productionTip = false //阻止 vue 在启动时生成生产提示。
+  </body>
+  <script type="text/javascript">
+    Vue.config.productionTip = false; //阻止 vue 在启动时生成生产提示。
 
     // el的两种写法
     // const v = new Vue({
@@ -27,7 +27,7 @@
 
     // data的两种写法
     new Vue({
-      el: '#root',
+      el: "#root",
       // data的第一种写法：对象式
       // data:{
       // 	name:'dtz'
@@ -35,11 +35,11 @@
 
       // data的第二种写法：函数式
       data() {
-        console.log('@@@', this) // 此处的this是Vue实例对象
+        console.log("@@@", this); // 此处的this是Vue实例对象
         return {
-          name: 'dtz'
-        }
-      }
-    })
+          name: "dtz",
+        };
+      },
+    });
   </script>
 </html>

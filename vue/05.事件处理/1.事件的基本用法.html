@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.7.10/dist/vue.js"></script>
-</head>
-<body>
+  </head>
+  <body>
     <!-- 
         1. 使用v-on:xxx或@xxx绑定事件，其中 xxx 是事件名
         2. 事件的回调需要配置在methods对象中，最终会在vm上
@@ -23,26 +23,26 @@
     </div>
   </body>
   <script type="text/javascript">
-    Vue.config.productionTip = false //阻止 vue 在启动时生成生产提示。
+    Vue.config.productionTip = false; //阻止 vue 在启动时生成生产提示。
 
     const vm = new Vue({
-      el: '#root',
+      el: "#root",
       data: {
-        name: 'dtz',
+        name: "dtz",
       },
       methods: {
         showInfo1(event) {
-          console.log(event.target.innerText)
+          console.log(event.target.innerText);
           // console.log(this) // 此处的this是vm
-          alert('同学你好！')
+          alert("同学你好！");
         },
         showInfo2(event, number) {
-          console.log(event, number)
-          console.log(event.target.innerText)
+          console.log(event, number);
+          console.log(event.target.innerText);
           // console.log(this) // 此处的this是vm
-          alert('同学你好！！' + number)
-        }
-      }
-    })
+          alert("同学你好！！" + number);
+        },
+      },
+    });
   </script>
 </html>

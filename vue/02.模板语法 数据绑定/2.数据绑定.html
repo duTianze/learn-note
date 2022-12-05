@@ -1,37 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.7.10/dist/vue.js"></script>
-</head>
-<body>
-<div id="root">
-    <!-- 普通写法 -->
-    <!-- 单向数据绑定：<input type="text" v-bind:value="name"><br/> -->
-    <!-- 双向数据绑定：<input type="text" v-model:value="name"><br/> -->
+  </head>
+  <body>
+    <div id="root">
+      <!-- 普通写法 -->
+      <!-- 单向数据绑定：<input type="text" v-bind:value="name"><br/> -->
+      <!-- 双向数据绑定：<input type="text" v-model:value="name"><br/> -->
 
-    <!-- 简写 -->
-    单向数据绑定：<input type="text" :value="name">
-    <br/>
-    双向数据绑定：<input type="text" v-model="name">
-    <br/>
+      <!-- 简写 -->
+      单向数据绑定：<input type="text" :value="name" />
+      <br />
+      双向数据绑定：<input type="text" v-model="name" />
+      <br />
 
-    <!-- 如下代码是错误的，因为 v-model 只能应用在表单类元素（输入类元素）上 -->
-    <!-- <h2 v-model:x="name">你好啊</h2> -->
-</div>
+      <!-- 如下代码是错误的，因为 v-model 只能应用在表单类元素（输入类元素）上 -->
+      <!-- <h2 v-model:x="name">你好啊</h2> -->
+    </div>
 
     <script type="text/javascript">
-        Vue.config.productionTip = false // 阻止 vue 在启动时生成生产提示。
+      Vue.config.productionTip = false; // 阻止 vue 在启动时生成生产提示。
 
-        new Vue({
-            el: '#root',
-            data: {
-                name: 'dtz'
-            }
-        })
-</script>
-</body>
+      new Vue({
+        el: "#root",
+        data: {
+          name: "dtz",
+        },
+      });
+    </script>
+  </body>
 </html>

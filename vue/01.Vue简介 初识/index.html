@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.7.10/dist/vue.js"></script>
-</head>
-<body>
-  <!-- 
+  </head>
+  <body>
+    <!-- 
     初识Vue
       1. 想让Vue工作，就必须创建一个Vue实例，且要传入一个配置对象
       2. root 容器里的代码依然符合html规范，只不过混入了一些特殊的Vue语法
@@ -27,17 +27,18 @@
     <div id="demo">
       <h1>Hello.{{ name.toUpperCase() }}.{{ address }}</h1>
     </div>
-</body>
-<script type="text/javascript" >
-  Vue.config.productionTip = false //阻止 vue 在启动时生成生产提示。
+  </body>
+  <script type="text/javascript">
+    Vue.config.productionTip = false; //阻止 vue 在启动时生成生产提示。
 
-  // 创建Vue实例
-  new Vue({
-    el: '#demo',	// el用于指定当前Vue实例为哪个容器服务，值通常为css选择器字符串
-    data: { 			// data中用于存储数据，数据供el所指定的容器去使用，值暂时先写成一个对象
-      name: 'dtz',
-      address: '北京'
-    }
-  })
-</script>
+    // 创建Vue实例
+    new Vue({
+      el: "#demo", // el用于指定当前Vue实例为哪个容器服务，值通常为css选择器字符串
+      data: {
+        // data中用于存储数据，数据供el所指定的容器去使用，值暂时先写成一个对象
+        name: "dtz",
+        address: "北京",
+      },
+    });
+  </script>
 </html>

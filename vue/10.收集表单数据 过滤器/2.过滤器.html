@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.10/dist/vue.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/dayjs/1.11.6/dayjs.min.js"></script>
+  </head>
+  <body>
+    <!-- 
+        定义：对要显示的数据进行特定格式化后再显示（适用于一些简单逻辑的处理）
+        注册过滤器：
+            Vue.filter(name, callback)全局过滤器
+            new Vue {filters: {}} 局部过滤器
+        使用过滤器：{{ xxx | 过滤器名}} 或 v-bind:属性 = "xxx | 过滤器名" 
+        备注：
+            a. 过滤器可以接收额外参数，多个过滤器也可以串联
+            b. 并没有改变原本的数据，而是产生新的对应的数据
+     -->
+    <div id="root">
+      <h2>时间</h2>
+      <h3>当前时间戳：{{time}}</h3>
+      <h3>转换后时间：{{time | timeFormater()}}</h3>
+      <h3>转换后时间：{{time | timeFormater('YYYY-MM-DD HH:mm:ss')}}</h3>
+      <h3>截取年月日：{{time | timeFormater() | mySlice}}</h3>
+    </div>
+  </body>
+  <script type="text/javascript">
+    Vue.config.productionTip = false;
+    // 全局过滤器
+    Vue.filter("mySlice", function (value) {
+      return value.slice(0, 11);
+    });
+    new Vue({
+      el: "#root",
+      data: {
+        time: 1626750147900,
+      },
+      // 局部过滤器
+      filters: {
+        timeFormater(value, str = "YYYY年MM月DD日 HH:mm:ss") {
+          return dayjs(value).format(str);
+        },
+      },
+    });
+  </script>
+</html>

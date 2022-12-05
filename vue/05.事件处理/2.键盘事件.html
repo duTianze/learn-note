@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.7.10/dist/vue.js"></script>
-</head>
-<body>
+  </head>
+  <body>
     <!-- 
         键盘上的每个按键都有自己的名称和编码，例如：Enter（13）。而Vue还对一些常用按键起了别名方便使用
         1. Vue中常用的按键别名
@@ -30,27 +30,39 @@
      -->
     <div id="root">
       <h2>欢迎打开{{name}}笔记</h2>
-      <input type="text" placeholder="按下回车提示输入" @keyup.enter="showInfo"><br/>
-      <input type="text" placeholder="按下tab提示输入" @keydown.tab="showInfo"><br/>
-      <input type="text" placeholder="按下回车提示输入" @keydown.huiche="showInfo"><br/>
+      <input
+        type="text"
+        placeholder="按下回车提示输入"
+        @keyup.enter="showInfo"
+      /><br />
+      <input
+        type="text"
+        placeholder="按下tab提示输入"
+        @keydown.tab="showInfo"
+      /><br />
+      <input
+        type="text"
+        placeholder="按下回车提示输入"
+        @keydown.huiche="showInfo"
+      /><br />
     </div>
 
     <script type="text/javascript">
-      Vue.config.productionTip = false	// 阻止 vue 在启动时生成生产提示。
-      Vue.config.keyCodes.huiche = 13		// 定义了一个别名按键
+      Vue.config.productionTip = false; // 阻止 vue 在启动时生成生产提示。
+      Vue.config.keyCodes.huiche = 13; // 定义了一个别名按键
 
       new Vue({
-        el: '#root',
+        el: "#root",
         data: {
-          name: 'dtz'
+          name: "dtz",
         },
         methods: {
           showInfo(e) {
             // console.log(e.key,e.keyCode)
-            console.log(e.target.value)
-          }
+            console.log(e.target.value);
+          },
         },
-      })
+      });
     </script>
   </body>
 </html>
