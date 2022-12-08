@@ -8,6 +8,17 @@
     <script src="https://cdn.jsdelivr.net/npm/vue@2.7.10/dist/vue.js"></script>
   </head>
   <body>
+    <!-- 
+    配置对象中常用的3个回调函数 
+        bind(element, binding)	    指令与元素成功绑定时调用
+        inserted(element, binding)  指令所在元素被插入页面时调用
+        update(element, binding)	指令所在模板结构被重新解析时调用
+        element就是DOM元素，binding就是要绑定的对象，
+        它包含以下属性：name value oldValue expression arg modifiers
+    备注
+    a. 指令定义时不加v-，但使用时要加v-
+    b. 指令名如果是多个单词，要使用kebab-case命名方式，不要用camelCase命名  
+     -->
     <div id="root">
       <h2>{{ name }}</h2>
       <h2>当前的n值是：<span v-text="n"></span></h2>
