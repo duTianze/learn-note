@@ -11,24 +11,24 @@
     <!-- 
 
     关于组件名
-    ●一个单词组成
-        ○第一种写法（首字母小写）：school
-        ○第二种写法（首字母大写）：School
-    ●多个单词组成
-        ○第一种写法（kebab-case 命名）：my-school
-        ○第二种写法（CamelCase 命名）：MySchool（需要Vue脚手架支持）
-    ●备注
-        ○组件名尽可能回避HTML中已有的元素名称，例如：h2、H2都不行
-        ○可以使用name配置项指定组件在开发者工具中呈现的名字
+    ● 一个单词组成
+        ○ 第一种写法（首字母小写）：school
+        ○ 第二种写法（首字母大写）：School
+    ● 多个单词组成
+        ○ 第一种写法（kebab-case 命名）：my-school
+        ○ 第二种写法（CamelCase 命名）：MySchool（需要Vue脚手架支持）
+    ● 备注
+        ○ 组件名尽可能回避HTML中已有的元素名称，例如：h2、H2都不行
+        ○ 可以使用name配置项指定组件在开发者工具中呈现的名字
 
-关于组件标签 
-●
-第一种写法：<school></school>
-●
-第二种写法：<school/>（需要Vue脚手架支持）
-●
-备注：不使用脚手架时，<school/>会导致后续组件不能渲染
-一个简写方式：const school = Vue.extend(options)可简写为const school = options，因为父组件components引入的时候会自动创建
+    关于组件标签 
+        ● 第一种写法：<school></school>
+        ● 第二种写法：<school/>（需要Vue脚手架支持）
+        ● 备注：不使用脚手架时，<school/>会导致后续组件不能渲染
+
+        一个简写方式：
+        const school = Vue.extend(options) 可简写为 const school = options，
+        因为父组件components引入的时候会自动创建
      -->
     <div id="root">
       <h2>{{msg}}</h2>
@@ -49,8 +49,8 @@
 			`,
       data() {
         return {
-          name: "电子科技大学",
-          address: "成都",
+          name: "尚硅谷",
+          address: "北京",
         };
       },
     });
