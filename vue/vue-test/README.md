@@ -52,3 +52,24 @@ ref 被用来给元素或子组件注册引用信息（id 的替代者）
 - 使用方式
   1. 打标识：`<h1 ref="xxx"></h1>或<School ref="xxx"></School>`
   2. 获取：this.$refs.xxx
+
+## props 配置项
+
+props 让组件接收外部传过来的数据
+
+- 传递数据`<Demo name="xxx" :age="18"/>`这里 age 前加`:`，通过 v-bind 使得里面的 18 是数字
+- 接收数据
+  第一种方式（只接收）`props:['name', 'age']`
+  第二种方式（限制类型）`props:{name:String, age:Number}`
+  第三种方式（限制类型、限制必要性、指定默认值）
+  ```javascript
+  props: {
+     name: {
+        type: String,	 // 类型
+        required: true,  // 必要性
+        default: 'dtz'   // 默认值
+     }
+  }
+  ```
+
+备注：`props 是只读的`，Vue 底层会监测你对 props 的修改，如果进行了修改，就会发出警告，若业务需求确实需要修改，那么请复制 props 的内容到 data 中，然后去修改 data 中的数据
