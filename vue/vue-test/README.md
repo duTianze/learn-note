@@ -43,3 +43,12 @@
 vue inspect > output.js 可以查看到 Vue 脚手架的默认配置
 使用 vue.config.js 可以对脚手架进行个性化定制，和 package.json 同级目录，
 详见 配置参考 | Vue CLI https://cli.vuejs.org/zh/config/#vue-config-js
+
+## ref 属性
+
+ref 被用来给元素或子组件注册引用信息（id 的替代者）
+
+- 应用在 html 标签上获取的是真实 DOM 元素，应用在组件标签上获取的是组件实例对象 vc
+- 使用方式
+  1. 打标识：`<h1 ref="xxx"></h1>或<School ref="xxx"></School>`
+  2. 获取：this.$refs.xxx
