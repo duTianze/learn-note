@@ -136,3 +136,19 @@ new Vue({
 // => "混入对象的钩子被调用"
 // => "组件钩子被调用"
 ```
+
+## plugin 插件
+
+1. 功能：用于增强 Vue
+2. 本质：包含 install 方法的一个对象，install 的第一个参数是 Vue，第二个以后的参数是插件使用者传递的数据
+3. 定义插件（见下 `src/plugin.js`）
+4. 使用插件：`Vue.use()`
+
+## scoped 样式
+
+1. 作用：让样式在局部生效，防止冲突
+2. 写法：`<style scoped>`
+   Vue 中的 webpack 并没有安装最新版，导致有些插件也不能默认安装最新版，
+   如 `npm i less-loader@7`，而不是最新版
+
+> 查看版本`npm view vue versions`

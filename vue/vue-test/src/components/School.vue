@@ -1,24 +1,24 @@
 <template>
-  <div>
-    <h2>学校名称：{{ name | mySlice }}</h2>
-    <h2>学校地址：{{ address }}</h2>
-    <button @click="test">点我测试一个hello方法</button>
+  <div class="demo">
+    <h2 class="title">学生姓名：{{ name }}</h2>
+    <h2 class="atguigu">学生性别：{{ sex }}</h2>
   </div>
 </template>
 
 <script>
 export default {
-  name: "School",
+  name: "Student",
   data() {
     return {
-      name: "尚硅谷atguigu",
-      address: "北京",
+      name: "张三",
+      sex: "男",
     };
-  },
-  methods: {
-    test() {
-      this.hello();
-    },
   },
 };
 </script>
+
+<style lang="css" scoped>
+.demo {
+  background-color: pink;
+}
+</style>
