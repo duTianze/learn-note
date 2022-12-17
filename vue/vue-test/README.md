@@ -73,3 +73,66 @@ props 让组件接收外部传过来的数据
   ```
 
 备注：`props 是只读的`，Vue 底层会监测你对 props 的修改，如果进行了修改，就会发出警告，若业务需求确实需要修改，那么请复制 props 的内容到 data 中，然后去修改 data 中的数据
+
+## mixin 混入
+
+1. 功能：可以把多个组件共用的配置提取成一个混入对象
+2. 使用方式
+   a. 定义混入
+   ```javascript
+   const mixin = {
+    data() {....},
+    methods: {....}
+    ....
+   }
+   ```
+   b. 使用混入
+   - 全局混入`Vue.mixin(xxx)`
+   - 局部混入`mixins:['xxx']`
+3. 备注
+
+   1. 组件和混入对象含有同名选项时，这些选项将以恰当的方式进行“合并”，在发生冲突时以组件优先
+
+   ```javascript
+   var mixin = {
+     data: function () {
+       return {
+         message: "hello",
+         name: "dtz",
+       };
+     },
+   };
+   new Vue({
+     mixins: [mixin],
+     data() {
+       return {
+         message: "goodbye",
+         address: "北京",
+       };
+     },
+     created() {
+       console.log(this.$data);
+       // => { message: "goodbye", name: "dtz", address: "北京" }
+     },
+   });
+   ```
+
+4. 同名生命周期钩子将合并为一个数组，因此都将被调用。另外，混入对象的钩子将在组件自身钩子之前调用
+
+```javascript
+var mixin = {
+  created() {
+    console.log("混入对象的钩子被调用");
+  },
+};
+
+new Vue({
+  mixins: [mixin],
+  created() {
+    console.log("组件钩子被调用");
+  },
+});
+
+// => "混入对象的钩子被调用"
+// => "组件钩子被调用"
+```
