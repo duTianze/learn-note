@@ -11,7 +11,7 @@
   </div>
 </template>
   
-  <script>
+<script>
 export default {
   name: "MyFooter",
   props: ["todos", "checkAllTodo", "clearAllTodo"],
@@ -38,9 +38,6 @@ export default {
     },
   },
   methods: {
-    /* checkAll(e){
-                  this.checkAllTodo(e.target.checked)
-              } */
     //清空所有已完成
     clearAll() {
       this.clearAllTodo();
@@ -49,7 +46,7 @@ export default {
 };
 </script>
   
-  <style scoped>
+<style scoped>
 /*footer*/
 .todo-footer {
   height: 40px;

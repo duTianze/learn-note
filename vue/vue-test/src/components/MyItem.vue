@@ -14,7 +14,7 @@
   </li>
 </template>
   
-  <script>
+<script>
 export default {
   name: "MyItem",
   //声明接收todo、checkTodo、deleteTodo
@@ -34,7 +34,7 @@ export default {
 };
 </script>
   
-  <style scoped>
+<style scoped>
 /*item*/
 li {
   list-style: none;

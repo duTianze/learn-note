@@ -10,7 +10,7 @@
   </ul>
 </template>
   
-  <script>
+<script>
 import MyItem from "./MyItem";
 
 export default {
@@ -21,7 +21,7 @@ export default {
 };
 </script>
   
-  <style scoped>
+<style scoped>
 /*main*/
 .todo-main {
   margin-left: 0px;
