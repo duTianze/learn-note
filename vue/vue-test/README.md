@@ -181,3 +181,24 @@ new Vue({
    2. LocalStorage 存储的内容，需要手动清除才会消失
    3. xxxStorage.getItem(xxx)如果 xxx 对应的 value 获取不到，那么 getItem()的返回值是 null
    4. JSON.parse(null)的结果依然是 null
+
+## 组件的自定义事件
+
+1. 一种组件间通信的方式，适用于：`子组件 ===> 父组件`
+2. 使用场景：子组件想给父组件传数据，那么就要在父组件中给子组件绑定自定义事件（事件的回调在 A 中）
+3. 绑定自定义事件
+   1. 第一种方式，在父组件中 `<Demo @事件名="方法"/>或<Demo v-on:事件名="方法"/>`
+   2. 第二种方式，在父组件中 `this.$refs.demo.$on('事件名',方法)`
+   ```javascript
+   <Demo ref="demo"/>
+   ......
+   mounted(){
+     this.$refs.demo.$on('atguigu',this.test)
+   }
+   ```
+   3. 若想让自定义事件只能触发一次，可以使用 `once` 修饰符，或 `$once` 方法
+4. 触发自定义事件 `this.$emit` ('事件名',数据)
+5. 解绑自定义事件 `this.$off` ('事件名')
+6. 组件上也可以绑定原生 DOM 事件，需要使用 native 修饰符 `@click.native="show"`
+   上面绑定自定义事件，即使绑定的是原生事件也会被认为是自定义的，需要加 native，加了后就将此事件给组件的根元素
+7. 注意：通过 `this.$refs.xxx.$on` ('事件名',回调函数)绑定自定义事件时，回调函数要么配置在 `methods` 中，要么用箭头函数，否则 this 指向会出问题
