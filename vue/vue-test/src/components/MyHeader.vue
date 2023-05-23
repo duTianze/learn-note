@@ -10,6 +10,7 @@
 </template>
 
 <script>
+import pubsub from "pubsub-js";
 import { nanoid } from "nanoid";
 export default {
   name: "MyHeader",

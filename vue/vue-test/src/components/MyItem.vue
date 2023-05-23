@@ -15,6 +15,8 @@
 </template>
   
 <script>
+import pubsub from "pubsub-js";
+
 export default {
   name: "MyItem",
   //声明接收todo、checkTodo、deleteTodo
@@ -27,7 +29,7 @@ export default {
     // 删除
     handleDelete(id) {
       if (confirm("确定删除吗？")) {
-        this.$bus.$emit("deleteTodo", id);
+        pubsub.publish("deleteTodo", id);
       }
     },
   },

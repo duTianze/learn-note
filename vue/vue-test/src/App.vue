@@ -15,6 +15,7 @@
 </template>
 
 <script>
+import pubsub from "pubsub-js";
 import MyHeader from "./components/MyHeader";
 import MyList from "./components/MyList";
 import MyFooter from "./components/MyFooter.vue";
@@ -27,14 +28,6 @@ export default {
       // 由于todos是MyHeader组件和MyFooter组件都在使用，所以放在App中（状态提升）
       todos: JSON.parse(localStorage.getItem("todos")) || [],
     };
-  },
-  mounted() {
-    this.$bus.$on("checkTodo", this.checkTodo);
-    this.$bus.$on("deleteTodo", this.deleteTodo);
-  },
-  beforeDestroy() {
-    this.$bus.$off("checkTodo");
-    this.$bus.$off("deleteTodo");
   },
   watch: {
     todos: {
@@ -56,7 +49,7 @@ export default {
       });
     },
     //删除一个todo
-    deleteTodo(id) {
+    deleteTodo(_, id) {
       this.todos = this.todos.filter((todo) => todo.id !== id);
     },
     //全选or取消全选
@@ -71,6 +64,14 @@ export default {
         return !todo.done;
       });
     },
+  },
+  mounted() {
+    this.$bus.$on("checkTodo", this.checkTodo); // 两种对比
+    this.pubId = pubsub.subscribe("deleteTodo", this.deleteTodo);
+  },
+  beforeDestroy() {
+    pubsub.unsubscribe(this.pubId);
+    this.$bus.$off("deleteTodo");
   },
 };
 </script>

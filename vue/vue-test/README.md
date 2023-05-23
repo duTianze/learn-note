@@ -245,107 +245,27 @@ b. 提供数据：this.$bus.$emit('xxx',data)
 
 3. 最好在 beforeDestroy 钩子中，用$off()去解绑当前组件所用到的事件
 
-src/main.js
+## 消息的订阅与发布（基本不用）
+
+消息订阅与发布（pubsub）消息订阅与发布是一种组件间通信的方式，适用于任意组件间通信  
+使用步骤
+
+1. 安装 pubsub：npm i pubsub-js
+2. 引入：import pubsub from 'pubsub-js'
+3. 接收数据：A 组件想接收数据，则在 A 组件中订阅消息，订阅的回调留在 A 组件自身  
+   ​
 
 ```
-import Vue from 'vue'
-import App from './App.vue'
-
-Vue.config.productionTip = false
-
-new Vue({
-  el:'#app',
-  render: h => h(App),
-  beforeCreate() {
-    Vue.prototype.$bus = this // 安装全局事件总线
-  }
-})
-```
-
-src/App.vue
-
-```
-<template>
-	<div class="app">
-		<School/>
-		<Student/>
-	</div>
-</template>
-
-<script>
-	import Student from './components/Student'
-	import School from './components/School'
-
-	export default {
-		name:'App',
-		components:{ School, Student }
-	}
-</script>
-
-<style scoped>.app{background-color: gray;padding: 5px;}</style>
-```
-
-src/components/School.vue
-
-```
-<template>
-  <div class="school">
-    <h2>学校名称：{{ name }}</h2>
-    <h2>学校地址：{{ address }}</h2>
-  </div>
-</template>
-
-<script>
-  export default {
-    name: "School",
-    data() {
-      return {
-        name: "尚硅谷",
-        address: "北京",
-      };
-    },
-    mounted() {  //🔴
-      // console.log('School',this)
-      this.$bus.$on("hello", (data) => {
-        console.log("我是School组件，收到了数据", data);
-      });
-    },
-    beforeDestroy() {  //🔴
-      this.$bus.$off("hello");
-    },
-  };
-</script>
-
-<style scoped>.school {background-color: skyblue;padding: 5px;}</style>
-```
-
-src/components/Student.vue
-
-```
-<template>
-  <div class="student">
-    <h2>学生姓名：{{ name }}</h2>
-    <h2>学生性别：{{ sex }}</h2>
-    <button @click="sendStudentName">把学生名给School组件</button> //🔴
-  </div>
-</template>
-
-<script>
-  export default {
-    name:'Student',
-    data() {
-      return {
-        name:'张三',
-        sex:'男'
-      }
-    },
-    methods: {  //🔴
-      sendStudentName(){
-        this.$bus.$emit('demo', this.name)
-      }
+export default {
+    methods: {
+        demo(msgName, data) {...}
     }
-  }
-</script>
-
-<style scoped>.student{background-color: pink;padding: 5px;margin-top: 30px;}</style>
+    ...
+    mounted() {
+			this.pid = pubsub.subscribe('xxx',this.demo)
+    }
+}
 ```
+
+4. 提供数据：pubsub.publish('xxx',data)
+5. 最好在 beforeDestroy 钩子中，使用 pubsub.unsubscribe(pid)取消订阅
