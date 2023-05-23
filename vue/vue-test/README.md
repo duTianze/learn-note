@@ -202,3 +202,150 @@ new Vue({
 6. 组件上也可以绑定原生 DOM 事件，需要使用 native 修饰符 `@click.native="show"`
    上面绑定自定义事件，即使绑定的是原生事件也会被认为是自定义的，需要加 native，加了后就将此事件给组件的根元素
 7. 注意：通过 `this.$refs.xxx.$on` ('事件名',回调函数)绑定自定义事件时，回调函数要么配置在 `methods` 中，要么用箭头函数，否则 this 指向会出问题
+
+## 全局事件总线（GlobalEventBus）
+
+一种可以在任意组件间通信的方式，本质上就是一个对象，它必须满足以下条件
+
+1. 所有的组件对象都必须能看见他
+2. 这个对象必须能够使用$on$emit$off 方法去绑定、触发和解绑事件
+
+使用步骤
+
+1. 定义全局事件总线
+
+   ```javascript
+   new Vue({
+       ...
+       beforeCreate() {
+         Vue.prototype.$bus = this // 安装全局事件总线，$bus 就是当前应用的 vm
+       },
+       ...
+   })
+   ```
+
+2. 使用事件总线
+
+a.接收数据：
+A 组件想接收数据，则在 A 组件中给$bus 绑定自定义事件，事件的回调留在 A 组件自身
+
+```javascript
+export default {
+    methods(){
+        demo(data){...}
+    }
+    ...
+    mounted() {
+        this.$bus.$on('xxx',this.demo)
+    }
+}
+```
+
+b. 提供数据：this.$bus.$emit('xxx',data)
+
+3. 最好在 beforeDestroy 钩子中，用$off()去解绑当前组件所用到的事件
+
+src/main.js
+
+```
+import Vue from 'vue'
+import App from './App.vue'
+
+Vue.config.productionTip = false
+
+new Vue({
+  el:'#app',
+  render: h => h(App),
+  beforeCreate() {
+    Vue.prototype.$bus = this // 安装全局事件总线
+  }
+})
+```
+
+src/App.vue
+
+```
+<template>
+	<div class="app">
+		<School/>
+		<Student/>
+	</div>
+</template>
+
+<script>
+	import Student from './components/Student'
+	import School from './components/School'
+
+	export default {
+		name:'App',
+		components:{ School, Student }
+	}
+</script>
+
+<style scoped>.app{background-color: gray;padding: 5px;}</style>
+```
+
+src/components/School.vue
+
+```
+<template>
+  <div class="school">
+    <h2>学校名称：{{ name }}</h2>
+    <h2>学校地址：{{ address }}</h2>
+  </div>
+</template>
+
+<script>
+  export default {
+    name: "School",
+    data() {
+      return {
+        name: "尚硅谷",
+        address: "北京",
+      };
+    },
+    mounted() {  //🔴
+      // console.log('School',this)
+      this.$bus.$on("hello", (data) => {
+        console.log("我是School组件，收到了数据", data);
+      });
+    },
+    beforeDestroy() {  //🔴
+      this.$bus.$off("hello");
+    },
+  };
+</script>
+
+<style scoped>.school {background-color: skyblue;padding: 5px;}</style>
+```
+
+src/components/Student.vue
+
+```
+<template>
+  <div class="student">
+    <h2>学生姓名：{{ name }}</h2>
+    <h2>学生性别：{{ sex }}</h2>
+    <button @click="sendStudentName">把学生名给School组件</button> //🔴
+  </div>
+</template>
+
+<script>
+  export default {
+    name:'Student',
+    data() {
+      return {
+        name:'张三',
+        sex:'男'
+      }
+    },
+    methods: {  //🔴
+      sendStudentName(){
+        this.$bus.$emit('demo', this.name)
+      }
+    }
+  }
+</script>
+
+<style scoped>.student{background-color: pink;padding: 5px;margin-top: 30px;}</style>
+```
