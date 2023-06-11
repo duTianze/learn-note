@@ -11,9 +11,10 @@ export default {
   name: "App",
   methods: {
     // npm install -g json-server
-    // json-server --watch --port 5000 ./students.json
+    // json-server --watch --port 5000 ./src/students.json
+    // json-server --watch --port 5001 ./src/cars.json
     getStudents() {
-      axios.get("http://localhost:8080/students").then(
+      axios.get("http://localhost:8080/api1/students").then(
         (response) => {
           console.log("请求成功了", response.data);
         },
@@ -23,7 +24,7 @@ export default {
       );
     },
     getCars() {
-      axios.get("http://localhost:8080/demo/cars").then(
+      axios.get("http://localhost:8080/api2/cars").then(
         (response) => {
           console.log("请求成功了", response.data);
         },

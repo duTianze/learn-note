@@ -356,3 +356,62 @@ Vue 封装的过度与动画：在插入、更新或移除 DOM 元素时，在�
   </h1>
 </transition-group>
 ```
+
+# Vue 脚手架配置代理
+
+本案例需要下载 axios 库`npm install axios`
+配置参考文档 Vue-Cli devServer.proxy
+`vue.config.js` 是一个可选的配置文件，如果项目的 (和 package.json 同级的) 根目录中存在这个文件，那么它会被 @vue/cli-service 自动加载。你也可以使用 `package.json` 中的 vue 字段，但是注意这种写法需要你严格遵照 JSON 的格式来写
+
+## 方法一
+
+在`vue.config.js`中添加如下配置
+
+```javascript
+module.exports = {
+  devServer: {
+    proxy: "http://localhost:5000",
+  },
+};
+```
+
+说明
+
+1. 优点：配置简单，请求资源时直接发给前端（8080）即可
+2. 缺点：不能配置多个代理，不能灵活的控制请求是否走代理
+3. 工作方式：若按照上述配置代理，当请求了前端不存在的资源时，才会将请求会转发给服务器 （优先匹配前端资源）
+
+## 方法二
+
+编写`vue.config.js`配置具体代理规则
+
+```javascript
+module.exports = {
+  devServer: {
+    proxy: {
+      "/api1": {
+        // 匹配所有以 '/api1'开头的请求路径
+        target: "http://localhost:5000", // 代理目标的基础路径
+        pathRewrite: { "^/api1": "" }, // 代理往后端服务器的请求去掉 /api1 前缀
+        ws: true, // WebSocket
+        changeOrigin: true,
+      },
+      "/api2": {
+        target: "http://localhost:5001",
+        pathRewrite: { "^/api2": "" },
+        changeOrigin: true,
+      },
+    },
+  },
+};
+/*
+   changeOrigin设置为true时，服务器收到的请求头中的host为：localhost:5000
+   changeOrigin设置为false时，服务器收到的请求头中的host为：localhost:8080
+   changeOrigin默认值为true
+*/
+```
+
+说明
+
+1. 优点：可以配置多个代理，且可以灵活的控制请求是否走代理
+2. 缺点：配置略微繁琐，请求资源时必须加前缀
