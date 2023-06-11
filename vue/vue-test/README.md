@@ -415,3 +415,95 @@ module.exports = {
 
 1. 优点：可以配置多个代理，且可以灵活的控制请求是否走代理
 2. 缺点：配置略微繁琐，请求资源时必须加前缀
+
+# slot 插槽
+
+`<slot>`插槽：让父组件可以向子组件指定位置插入 html 结构，也是一种组件间通信的方式，
+适用于 父组件 ===> 子组件
+
+1. 分类：默认插槽、具名插槽、作用域插槽
+2. 使用方式
+   a. 默认插槽
+
+   ```javascript
+   父组件中：
+        <Category>
+           <div>html结构1</div>
+        </Category>
+   子组件中：Category
+        <template>
+            <div>
+               <!-- 定义插槽 -->
+               <slot>插槽默认内容...</slot>
+            </div>
+        </template>
+   ```
+
+   b. 具名插槽
+   父组件指明放入子组件的哪个插槽 `slot="footer"`，如果是 `template` 可以写成 `v-slot:footer`
+
+   ```javascript
+   父组件中：
+        <Category>
+            <template slot="center">
+              <div>html结构1</div>
+            </template>
+
+            <template v-slot:footer>
+               <div>html结构2</div>
+            </template>
+        </Category>
+   子组件中：
+        <template>
+            <div>
+               <!-- 定义插槽 -->
+               <slot name="center">插槽默认内容...</slot>
+               <slot name="footer">插槽默认内容...</slot>
+            </div>
+        </template>
+   ```
+
+   c. 作用域插槽
+   `scope` 用于父组件往子组件插槽放的 html 结构接收子组件的数据
+   理解：`数据在组件的自身，但根据数据生成的结构需要组件的使用者来决定`
+   （games 数据在 Category 组件中，但使用数据所遍历出来的结构由 App 组件决定）
+
+   ```javascript
+   父组件中：
+        <Category>
+            <template scope="scopeData">
+                <!-- 生成的是ul列表 -->
+                <ul>
+                  <li v-for="g in scopeData.games" :key="g">{{g}}</li>
+                </ul>
+            </template>
+        </Category>
+
+        <Category>
+            <template slot-scope="scopeData">
+                <!-- 生成的是h4标题 -->
+                <h4 v-for="g in scopeData.games" :key="g">{{g}}</h4>
+            </template>
+        </Category>
+   子组件中：
+        <template>
+            <div>
+                <slot :games="games"></slot>
+            </div>
+        </template>
+
+        <script>
+            export default {
+                name:'Category',
+                props:['title'],
+                //数据在子组件自身
+                data() {
+                    return {
+                        games:['红色警戒','穿越火线','劲舞团','超级玛丽']
+                    }
+                },
+            }
+        </script>
+   ```
+
+   注意：关于样式，既可以写在父组件中，解析后放入子组件插槽；也可以放在子组件中，传给子组件再解析
