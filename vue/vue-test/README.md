@@ -722,3 +722,82 @@ this.$store.commit('personAbout/ADD_PERSON',person)
 //方式二：借助mapMutations：
 ...mapMutations('countAbout',{increment:'JIA',decrement:'JIAN'}),
 ```
+
+# Vue Router 相关理解 基本路由 多级路由
+
+## 相关理解
+
+### vue-router 的理解
+
+vue 的一个插件库，专门用来实现 SPA 应用
+
+### 对 SPA 应用的理解
+
+1. 单页 Web 应用（single page web application，SPA）
+2. 整个应用`只有一个完整的页面`
+3. 点击页面中的导航链接`不会刷新`页面，只会做页面的`局部更新`
+4. 数据需要通过 `ajax` 请求获取
+
+### 路由的理解
+
+1. 什么是路由?
+   a. 一个路由就是一组映射关系（key - value）
+   b. key 为路径，value 可能是 function 或 componen
+2. 路由分类
+   - 后端路由
+     - 理解：value 是 function，用于处理客户端提交的请求
+     - 工作过程：服务器接收到一个请求时，根据请求路径找到匹配的函数来处理请求，返回响应数据
+   - 前端路由
+     - 理解：value 是 component，用于展示页面内容
+     - 工作过程：当浏览器的路径改变时，对应的组件就会显示
+
+## 基本路由
+
+1. 安装 `vue-router`，命令 `npm i vue-router` `npm i vue-router@3`
+2. 应用插件 `Vue.use(VueRouter)`
+3. 编写 `router` 配置项
+
+```javascript
+import VueRouter from "vue-router"; // 引入VueRouter
+import About from "../components/About"; // 路由组件
+import Home from "../components/Home"; // 路由组件
+
+// 创建router实例对象，去管理一组一组的路由规则
+const router = new VueRouter({
+  routes: [
+    {
+      path: "/about",
+      component: About,
+    },
+    {
+      path: "/home",
+      component: Home,
+    },
+  ],
+});
+
+//暴露router
+export default router;
+```
+
+4. 实现切换
+   `<router-link></router-link>`浏览器会被替换为 a 标签 active-class 可配置高亮样式
+   ```javascript
+   <router-link active-class="active" to="/about">
+     About
+   </router-link>
+   ```
+5. 指定展示位`<router-view></router-view>`
+
+## 几个注意事项
+
+1. 路由组件通常存放在`pages`文件夹，一般组件通常存放在`components`文件夹
+   比如上一节的案例就可以修改为
+   `src/pages/Home.vue`
+   src/pages/About.vue`
+`src/router/index.js`
+`src/components/Banner.vue`
+`src/App.vue`
+2. 通过切换，`隐藏`了的路由组件，默认是被销毁掉的，需要的时候再去挂载
+3. 每个组件都有自己的`$route`属性，里面存储着自己的路由信息
+4. 整个应用只有一个`router`，可以通过组件的`$router`属性获取到
