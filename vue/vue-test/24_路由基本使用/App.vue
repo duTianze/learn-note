@@ -15,11 +15,11 @@
             active-class="active"
             to="/about"
           >
-            About</router-link
-          >
+            About
+          </router-link>
           <router-link class="list-group-item" active-class="active" to="/home">
-            Home</router-link
-          >
+            Home
+          </router-link>
         </div>
       </div>
       <div class="col-xs-6">
