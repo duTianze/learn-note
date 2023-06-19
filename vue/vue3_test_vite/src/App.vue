@@ -1,30 +1,39 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
-  </div>
-  <HelloWorld msg="Vite + Vue" />
+  <!--vue3的组件模版结构可以没有根标签-->
+  <h1>我是app组件</h1>
+  <h1>我叫{{ name }}, {{ age }}岁</h1>
+  <h3>职位:{{ job.type }}</h3>
+  <h3>薪水:{{ job.salary }}</h3>
+  <button @click="changeInfo">修改人的信息</button>
 </template>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
-</style>
+<script>
+import { ref } from "vue";
+export default {
+  name: "App",
+  setup() {
+    // 数据
+    const name = ref("张三");
+    const age = ref(18);
+    const job = ref({
+      type: "frontend developer",
+      salary: "30",
+    });
+
+    // 方法
+    function changeInfo() {
+      name.value = "李四";
+      age.value = 42;
+      job.value.type = "UI developer";
+    }
+
+    //返回一个对象
+    return {
+      name,
+      age,
+      job,
+      changeInfo,
+    };
+  },
+};
+</script>
