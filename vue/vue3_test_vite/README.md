@@ -62,3 +62,74 @@ npm run dev
 - 语法：`const 代理对象 = reactive(源对象)`接收一个对象（或数组），返回一个`代理对象(Proxy 的实例对象，简称 proxy 对象)`
 - reactive 定义的响应式数据是“深层次的”。
 - 内部基于 ES6 的 Proxy 实现，通过代理对象操作源对象内部数据进行操作。
+
+## 4.Vue3.0 中的响应式原理
+
+### vue2.x 的响应式
+
+- 实现原理：
+  - 对象类型：通过`Object.defineProperty()`对属性的读取、修改进行拦截（数据劫持）。
+  - 数组类型：通过重写更新数组的一系列方法来实现拦截。（对数组的变更方法进行了包裹）。
+    ```js
+    Object.defineProperty(data, "count", {
+      get() {},
+      set() {},
+    });
+    ```
+- 存在问题：
+  - 新增属性、删除属性, 界面不会更新。
+  - 直接通过下标修改数组, 界面不会自动更新。
+
+### Vue3.0 的响应式
+
+- 实现原理:
+
+  - 通过 Proxy（代理）: 拦截对象中任意属性的变化, 包括：属性值的读写、属性的添加、属性的删除等。
+  - 通过 Reflect（反射）: 对源对象的属性进行操作。
+  - MDN 文档中描述的 Proxy 与 Reflect：
+
+    - Proxy：[https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Proxy](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Proxy)
+    - Reflect：[https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Reflect](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Reflect)
+
+      ```js
+      new Proxy(data, {
+        // 拦截读取属性值
+        get(target, prop) {
+          return Reflect.get(target, prop);
+        },
+        // 拦截设置属性值或添加新属性
+        set(target, prop, value) {
+          return Reflect.set(target, prop, value);
+        },
+        // 拦截删除属性
+        deleteProperty(target, prop) {
+          return Reflect.deleteProperty(target, prop);
+        },
+      });
+
+      proxy.name = "tom";
+      ```
+
+## 5.reactive 对比 ref
+
+- 从定义数据角度对比：
+  - ref 用来定义：`基本类型数据`。
+  - reactive 用来定义：`对象(或数组)类型数据`。
+  - 备注：ref 也可以用来定义`对象(或数组)类型数据`, 它内部会自动通过`reactive`转为`代理对象`。
+- 从原理角度对比：
+  - ref 通过`Object.defineProperty()`的`get`与`set`来实现响应式（数据劫持）。
+  - reactive 通过使用`Proxy`来实现响应式(数据劫持), 并通过`Reflect`操作`源对象`内部的数据。
+- 从使用角度对比：
+  - ref 定义的数据：操作数据需要`.value`，读取数据时模板中直接读取不需要`.value`。
+  - reactive 定义的数据：操作数据与读取数据：均不需要`.value`。
+
+## 6.setup 的两个注意点
+
+- setup 执行的时机
+  - 在 beforeCreate 之前执行一次，this 是 undefined。
+- setup 的参数
+  - props：值为对象，包含：组件外部传递过来，且组件内部声明接收了的属性。
+  - context：上下文对象
+    - attrs: 值为对象，包含：组件外部传递过来，但没有在 props 配置中声明的属性, 相当于 `this.$attrs`。
+    - slots: 收到的插槽内容, 相当于 `this.$slots`。
+    - emit: 分发自定义事件的函数, 相当于 `this.$emit`。
