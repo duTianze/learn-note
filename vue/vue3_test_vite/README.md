@@ -168,8 +168,10 @@ npm run dev
 
 - 与 Vue2.x 中 watch 配置功能一致
 - 两个小“坑”：
+
   - 监视 reactive 定义的响应式数据时：oldValue 无法正确获取、强制开启了深度监视（deep 配置失效）。
   - 监视 reactive 定义的响应式数据中某个属性时：deep 配置有效。
+
   ```js
   //情况一：监视ref定义的响应式数据
   watch(
@@ -240,3 +242,18 @@ npm run dev
     console.log("watchEffect配置的回调执行了");
   });
   ```
+
+## 8.生命周期
+
+- Vue3.0 中可以继续使用 Vue2.x 中的生命周期钩子，但有有两个被更名：
+  - `beforeDestroy`改名为 `beforeUnmount`
+  - `destroyed`改名为 `unmounted`
+- Vue3.0 也提供了 Composition API 形式的生命周期钩子，与 Vue2.x 中钩子对应关系如下：
+  - `beforeCreate`===>`setup()`
+  - `created`=======>`setup()`
+  - `beforeMount` ===>`onBeforeMount`
+  - `mounted`=======>`onMounted`
+  - `beforeUpdate`===>`onBeforeUpdate`
+  - `updated` =======>`onUpdated`
+  - `beforeUnmount` ==>`onBeforeUnmount`
+  - `unmounted` =====>`onUnmounted`
