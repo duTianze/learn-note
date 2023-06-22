@@ -257,3 +257,16 @@ npm run dev
   - `updated` =======>`onUpdated`
   - `beforeUnmount` ==>`onBeforeUnmount`
   - `unmounted` =====>`onUnmounted`
+
+## 9.自定义 hook 函数
+
+- 什么是 hook？—— 本质是一个函数，把 setup 函数中使用的 Composition API 进行了封装。
+- 类似于 vue2.x 中的 mixin。
+- 自定义 hook 的优势: 复用代码, 让 setup 中的逻辑更清楚易懂。
+
+## 10.toRef
+
+- 作用：创建一个 ref 对象，其 value 值指向另一个对象中的某个属性。
+- 语法：`const name = toRef(person,'name')`
+- 应用: 要将响应式对象中的某个属性单独提供给外部使用时。
+- 扩展：`toRefs` 与`toRef`功能一致，但可以批量创建多个 ref 对象，语法：`toRefs(person)`
