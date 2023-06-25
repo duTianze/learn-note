@@ -22,6 +22,7 @@ export default {
         },
       },
     });
+    console.log("@@222", person);
 
     //ref类型的值在模板里使用是不需要.value来取的
     const name1 = person.name; //注意输出字符串，并不是响应式的数据
