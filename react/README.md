@@ -204,3 +204,52 @@ switch(){case:xxxx}
   ) ReactDOM.render(VDOM, document.getElementById('test'))
 </script>
 ```
+
+# React 面向组件编程
+
+## 函数式组件
+
+```html
+<script type="text/babel">
+  //1.创建函数式组件
+  function MyComponent() {
+    //此处的 this 是 undefined，因为 babel 编译后开启了严格模式
+    console.log(this);
+    return <h2>我是用函数定义的组件(适用于【简单组件】的定义)</h2>;
+  }
+  //2.渲染组件到页面
+  ReactDOM.render(<MyComponent />, document.getElementById("test"));
+</script>
+```
+
+要点：
+
+- 组件名称首字母必须大写，否则会解析成普通标签导致报错，详见 JSX 语法规则
+- 函数需返回一个虚拟 DOM
+- 渲染组件时需要使用标签形式，同时标签必须闭合
+
+渲染组件的过程：
+
+- React 解析标签，寻找对应组件
+- 发现组件是函数式组件，则调用函数，将返回的虚拟 DOM 转换为真实 DOM ，并渲染到页面中
+
+## 类式组件
+
+```html
+<script type="text/babel">
+  // 创建类式组件
+  class MyComponent extends React.Component {
+    render() {
+      console.log("render中的this：", this);
+      return <h2>我是用类定义的组件(适用于【复杂组件】的定义)</h2>;
+    }
+  }
+  ReactDOM.render(<MyComponent />, document.getElementById("test"));
+</script>
+```
+
+组件渲染过程：
+
+- React 解析组件标签，寻找组件
+- 发现是类式组件，则 `new` 该类的实例对象，通过实例调用原型上的 `render` 方法
+- 将 `render` 返回的虚拟 DOM 转为真实 DOM ，渲染到页面上
