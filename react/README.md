@@ -253,3 +253,71 @@ switch(){case:xxxx}
 - React 解析组件标签，寻找组件
 - 发现是类式组件，则 `new` 该类的实例对象，通过实例调用原型上的 `render` 方法
 - 将 `render` 返回的虚拟 DOM 转为真实 DOM ，渲染到页面上
+
+## 组件实例核心属性 state
+
+`state` 是组件实例对象最重要的属性，值为对象。又称为状态机，通过更新组件的 `state` 来更新对应的页面显示。
+
+要点：
+
+- 初始化 `state`
+- React 中事件绑定
+- `this` 指向问题
+- `setState` 修改 `state` 状态
+- `constructor` 、`render` 、自定义方法的调用次数
+
+```html
+<script type="text/babel">
+  class Weather extends React.Component {
+    // 调用一次
+    constructor(props) {
+      super(props);
+      // 初始化 state
+      this.state = { isHot: true, wind: "微风" };
+      // 解决 this 指向问题
+      this.changeWeather = this.changeWeather.bind(this);
+    }
+    // 调用 1+N 次
+    render() {
+      // 读取状态
+      const { isHot } = this.state;
+      return (
+        <h1 onClick={this.changeWeather}>今天天气 {isHot ? "炎热" : "凉爽"}</h1>
+      );
+    }
+    // 点一次调一次
+    changeWeather() {
+      const isHot = this.state.isHot;
+      // 对 state 的修改是一种合并而非替换，即 wind 依然存在
+      this.setState({ isHot: !isHot });
+    }
+  }
+
+  ReactDOM.render(<Weather />, document.getElementById("test"));
+</script>
+```
+
+简化版：
+
+```html
+<script>
+  class Weather extends React.Component {
+    state = { isHot: true, wind: "微风" };
+
+    render() {
+      const { isHot } = this.state;
+      return (
+        <h2 onClick={this.changeWeather}>天气{isHot ? "炎热" : "凉爽"}</h2>
+      );
+    }
+
+    // 采用箭头函数 + 赋值语句形式
+    changeWeather = () => {
+      const isHot = this.state.isHot;
+      this.setState = { isHot: !isHot };
+    };
+  }
+
+  ReactDOM.render(<Weather />, document.getElementById("test"));
+</script>
+```
