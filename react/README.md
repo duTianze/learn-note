@@ -321,3 +321,213 @@ switch(){case:xxxx}
   ReactDOM.render(<Weather />, document.getElementById("test"));
 </script>
 ```
+
+## 组件实例核心属性 props
+
+每个组件对象都有 `props` 属性，组件标签的属性都保存在 `props` 中。
+
+`props` 是只读的，不能修改。
+
+### props 基本使用
+
+```html
+<script type="text/babel">
+  class Person extends React.Component {
+    render() {
+      const { name, age, sex } = this.props;
+      return (
+        <ul>
+          <li>姓名：{name}</li>
+          <li>性别：{sex}</li>
+          <li>年龄：{age}</li>
+        </ul>
+      );
+    }
+  }
+
+  // 类似于标签属性传值
+  ReactDOM.render(
+    <Person name="Lily" age={19} sex="男" />,
+    document.getElementById("test")
+  );
+</script>
+```
+
+### 批量传递 props
+
+```html
+<script type="text/babel">
+  class Person extends React.Component {
+    render() {
+      const { name, age, sex } = this.props;
+      return (
+        <ul>
+          <li>姓名：{name}</li>
+          <li>性别：{sex}</li>
+          <li>年龄：{age}</li>
+        </ul>
+      );
+    }
+  }
+
+  const obj = { name: "Ben", age: 21, sex: "女" };
+  ReactDOM.render(<Person {...obj} />, document.getElementById("test"));
+</script>
+```
+
+### 限制 props
+
+在 `React 15.5` 以前，`React` 身上有一个 `PropTypes` 属性可直接使用，即 `name: React.PropTypes.string.isRequired` ，没有把 `PropTypes` 单独封装为一个模块。
+
+从 `React 15.5` 开始，把 `PropTypes` 单独封装为一个模块，需要额外导入使用。
+
+```html
+<!-- 引入prop-types，用于对组件标签属性进行限制 -->
+<script type="text/javascript" src="../js/prop-types.js"></script>
+
+<script type="text/babel">
+  class Person extends React.Component {
+    render() {
+      const { name, age, sex } = this.props;
+      return (
+        <ul>
+          <li>姓名：{name}</li>
+          <li>性别：{sex}</li>
+          <li>年龄：{age}</li>
+        </ul>
+      );
+    }
+  }
+
+  // 类型和必要性限制
+  Person.propTypes = {
+    name: PropTypes.string.isRequired,
+    sex: PropTypes.string,
+    age: PropTypes.number,
+    // 限制 speak 为函数
+    speak: PropTypes.func,
+  };
+
+  // 指定默认值
+  Person.defaultProps = {
+    sex: "male",
+    age: 19,
+  };
+
+  ReactDOM.render(
+    <Person name="Vue" sex="male" age={11} speak={speak} />,
+    document.getElementById("test")
+  );
+
+  function speak() {
+    console.log("speaking...");
+  }
+</script>
+```
+
+### props 的简写形式
+
+`Person.propTypes` 和 `Person.defaultProps` 可以看作在类身上添加属性，利用 `static` 关键词就能在类内部进行声明。因此所谓简写只是从类外部移到类内部。
+
+```html
+<!-- 引入prop-types，用于对组件标签属性进行限制 -->
+<script type="text/javascript" src="../js/prop-types.js"></script>
+
+<script type="text/babel">
+  class Person extends React.Component {
+    static propTypes = {
+      name: PropTypes.string.isRequired,
+      sex: PropTypes.string,
+      age: PropTypes.number,
+      // 限制 speak 为函数
+      speak: PropTypes.func,
+    };
+    static defaultProps = {
+      sex: "male",
+      age: 19,
+    };
+
+    render() {
+      const { name, age, sex } = this.props;
+      return (
+        <ul>
+          <li>姓名：{name}</li>
+          <li>性别：{sex}</li>
+          <li>年龄：{age}</li>
+        </ul>
+      );
+    }
+  }
+
+  ReactDOM.render(
+    <Person name="Vue" sex="male" age={11} speak={speak} />,
+    document.getElementById("test")
+  );
+
+  function speak() {
+    console.log("speaking...");
+  }
+</script>
+```
+
+### 类式组件的构造器与 props
+
+[官网文档说明](https://zh-hans.reactjs.org/docs/react-component.html#constructor)
+
+构造函数一般用在两种情况：
+
+- 通过给 `this.state` 赋值对象来初始化内部 `state`
+- 为事件处理函数绑定实例
+
+```js
+constructor(props) {
+  super(props)
+  // 初始化 state
+  this.state = { isHot: true, wind: '微风' }
+  // 解决 this 指向问题
+  this.changeWeather = this.changeWeather.bind(this)
+}
+```
+
+因此构造器一般都不需要写。如果要在构造器内使用 `this.props` 才声明构造器，并且需要在最开始调用 `super(props)` ：
+
+```js
+constructor(props) {
+  super(props)
+  console.log(this.props)
+}
+```
+
+### 函数式组件使用 props
+
+由于函数可以传递参数，因此函数式组件可以使用 `props` 。
+
+```html
+<!-- 引入prop-types，用于对组件标签属性进行限制 -->
+<script type="text/javascript" src="../js/prop-types.js"></script>
+
+<script type="text/babel">
+  function Person(props) {
+    const { name, age, sex } = props;
+    return (
+      <ul>
+        <li>姓名：{name}</li>
+        <li>性别：{sex}</li>
+        <li>年龄：{age}</li>
+      </ul>
+    );
+  }
+  Person.propTypes = {
+    name: PropTypes.string.isRequired,
+    sex: PropTypes.string,
+    age: PropTypes.number,
+  };
+
+  Person.defaultProps = {
+    sex: "男",
+    age: 18,
+  };
+
+  ReactDOM.render(<Person name="jerry" />, document.getElementById("test"));
+</script>
+```
