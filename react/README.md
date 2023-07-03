@@ -872,3 +872,179 @@ class Login extends React.Component {
   }
 }
 ```
+
+## 生命周期
+
+### 生命周期旧版
+
+**初始化阶段**：`ReactDOM.render()` 触发的初次渲染
+
+- `constructor`
+- `componentWillMount`
+- `render`
+- `componentDidMount`
+
+**更新阶段**
+
+1. 父组件重新 `render` 触发的更新
+
+- `componentWillReceiveProps`
+- `shouldComponentUpdate` ：控制组件是否更新的阀门，返回值为布尔值，默认为 `true` 。若返回 `false` ，则后续流程不会进行。
+- `componentWillUpdate`
+- `render`
+- `componentDidUpdate`
+
+2. 组件内部调用 `this.setState()` 修改状态
+
+- `shouldComponentUpdate`
+- `componentWillUpdate`
+- `render`
+- `componentDidUpdate`
+
+3. 组件内部调用 `this.forceUpdate()` 强制更新
+
+- `componentWillUpdate`
+- `render`
+- `componentDidUpdate`
+
+**卸载阶段**：`ReactDOM.unmountComponentAtNode()` 触发
+
+- `componentWillUnmount`
+
+### 生命周期新版
+
+[更改内容](https://zh-hans.reactjs.org/blog/2018/03/27/update-on-async-rendering.html)：
+
+- 废弃三个钩子：`componentWillMount` 、`componentWillReceiveProps` 、 `componentWillUpdate` 。在新版本中这三个钩子需要加 `UNSAFE_` 前缀才能使用，后续可能会废弃。
+- 新增两个钩子（实际场景用得很少）：`getDerivedStateFromProps` 、`getSnapshotBeforeUpdate`
+
+[static getDerivedStateFromProps(props, state)](https://zh-hans.reactjs.org/docs/react-component.html#static-getderivedstatefromprops)：
+
+- 需使用 `static` 修饰
+- 需返回一个对象更新 `state` 或返回 `null`
+- 适用于如下情况：`state` 的值任何时候都取决于 `props`
+
+[getSnapshotBeforeUpdate(prevProps, prevState)](https://zh-hans.reactjs.org/docs/react-component.html#getsnapshotbeforeupdate)：
+
+- 在组件更新之前获取快照
+- 得组件能在发生更改之前从 DOM 中捕获一些信息（如滚动位置）
+- 返回值将作为参数传递给 `componentDidUpdate()`
+
+```js
+static getDerivedStateFromProps(props,state){
+  console.log('getDerivedStateFromProps',props,state);
+  return null
+}
+
+getSnapshotBeforeUpdate(){
+  console.log('getSnapshotBeforeUpdate');
+  return 'atguigu'
+}
+
+componentDidUpdate(preProps,preState,snapshotValue){
+  console.log('componentDidUpdate',preProps,preState,snapshotValue);
+}
+```
+
+```js
+// getSnapshotBeforeUpdate 案例
+class NewsList extends React.Component {
+  state = { newsArr: [] };
+
+  componentDidMount() {
+    setInterval(() => {
+      //获取原状态
+      const { newsArr } = this.state;
+      //模拟一条新闻
+      const news = "新闻" + (newsArr.length + 1);
+      //更新状态
+      this.setState({ newsArr: [news, ...newsArr] });
+    }, 1000);
+  }
+
+  getSnapshotBeforeUpdate() {
+    return this.refs.list.scrollHeight;
+  }
+
+  componentDidUpdate(preProps, preState, height) {
+    this.refs.list.scrollTop += this.refs.list.scrollHeight - height;
+  }
+
+  render() {
+    return (
+      <div className="list" ref="list">
+        {this.state.newsArr.map((n, index) => {
+          return (
+            <div key={index} className="news">
+              {n}
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+}
+ReactDOM.render(<NewsList />, document.getElementById("test"));
+```
+
+### 最重要的三个钩子
+
+- `render` ：初始化渲染和更新渲染
+- `componentDidMount` ：进行初始化，如开启定时器、发送网络请求、订阅消息
+- `componentWillUnmount` ：进行收尾，如关闭定时器、取消订阅消息
+
+## 虚拟 DOM 与 Diff 算法
+
+**`key` 的作用：**
+
+`key` 是虚拟 DOM 对象的标识，可提高页面更新渲染的效率。
+
+当状态中的数据发生变化时，React 会根据新数据生成新的虚拟 DOM ，接着对新旧虚拟 DOM 进行 Diff 比较，规则如下：
+
+- 旧虚拟 DOM 找到和新虚拟 DOM 相同的 key：
+  - 若内容没变，直接复用真实 DOM
+  - 若内容改变，则生成新的真实 DOM ，替换页面中之前的真实 DOM
+- 旧虚拟 DOM 未找到和新虚拟 DOM 相同的 key：根据数据创建新的真实 DOM ，渲染到页面
+
+**使用 `index` 作为 `key` 可能引发的问题：**
+
+- 若对数据进行逆序添加、逆序删除等破坏顺序的操作，会进行没有必要的真实 DOM 更新。界面效果没问题，但效率低下。
+- 如果结构中包含输入类的 DOM（如 input 输入框） ，则会产生错误的 DOM 更新。
+- 若不存在对数据逆序添加、逆序删除等破坏顺序的操作，则没有问题。
+
+```js
+// 使用 index 作为 key 引发的问题
+class Person extends React.Component {
+  state = {
+    persons: [
+      { id: 1, name: '小张', age: 18 },
+      { id: 2, name: '小李', age: 19 },
+    ],
+  }
+
+  add = () => {
+    const { persons } = this.state
+    const p = { id: persons.length + 1, name: '小王', age: 20 }
+    this.setState({ persons: [p, ...persons] })
+  }
+
+  render() {
+    return (
+      <div>
+        <h2>展示人员信息</h2>
+        <button onClick={this.add}>添加小王</button>
+        <h3>使用index作为key</h3>
+        <ul>
+          {this.state.persons.map((personObj, index) => {
+            return (
+              <li key={index}>
+                {personObj.name}---{personObj.age}
+                <input type="text" />
+              </li>
+            )
+          })}
+      </div>
+    )
+  }
+}
+```
