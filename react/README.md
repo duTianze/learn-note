@@ -531,3 +531,175 @@ constructor(props) {
   ReactDOM.render(<Person name="jerry" />, document.getElementById("test"));
 </script>
 ```
+
+## 组件实例核心属性 refs
+
+通过定义 `ref` 属性可以给标签添加标识。
+
+### 字符串形式的 ref
+
+这种形式已过时，效率不高，[官方](https://zh-hans.reactjs.org/docs/refs-and-the-dom.html#legacy-api-string-refs)不建议使用。
+
+```html
+<script type="text/babel">
+  class Demo extends React.Component {
+    showData = () => {
+      const { input1 } = this.refs;
+      alert(input1.value);
+    };
+    render() {
+      return (
+        <div>
+          <input ref="input1" type="text" placeholder="点击按钮提示数据" />
+          &nbsp;
+          <button onClick={this.showData}>点我提示左侧的数据</button>&nbsp;
+        </div>
+      );
+    }
+  }
+
+  ReactDOM.render(<Demo />, document.getElementById("test"));
+</script>
+```
+
+### 回调形式的 ref
+
+要点：
+
+- `c => this.input1 = c` 就是给组件实例添加 `input1` 属性，值为节点
+- 由于是箭头函数，因此 `this` 是 `render` 函数里的 `this` ，即组件实例
+
+```html
+<script type="text/babel">
+  class Demo extends React.Component {
+    showData = () => {
+      const { input1 } = this;
+      alert(input1.value);
+    };
+    render() {
+      return (
+        <div>
+          <input
+            ref={(c) => {
+              this.input1 = c;
+            }}
+            type="text"
+            placeholder="点击按钮提示数据"
+          />
+          &nbsp;
+          <button onClick={this.showData}>点我提示左侧的数据</button>&nbsp;
+        </div>
+      );
+    }
+  }
+
+  ReactDOM.render(<Demo />, document.getElementById("test"));
+</script>
+```
+
+关于回调 `ref` 执行次数的问题，[官网](https://zh-hans.reactjs.org/docs/refs-and-the-dom.html#caveats-with-callback-refs)描述：
+
+TIP
+
+如果 `ref` 回调函数是以内联函数的方式定义的，在更新过程中它会被执行两次，第一次传入参数 `null`，然后第二次会传入参数 DOM 元素。这是因为在每次渲染时会创建一个新的函数实例，所以 React 清空旧的 `ref` 并且设置新的。通过将 `ref` 的回调函数定义成 `class` 的绑定函数的方式可以避免上述问题，但是大多数情况下它是无关紧要的。
+
+即内联函数形式，在更新过程中 `ref` 回调会被执行两次，第一次传入 `null` ，第二次传入 DOM 元素。若是下述形式，则只执行一次。但是对功能实现没有影响，因此一般也是用内联函数形式。
+
+```html
+<script type="text/babel">
+  //创建组件
+  class Demo extends React.Component {
+    state = { isHot: false };
+
+    changeWeather = () => {
+      const { isHot } = this.state;
+      this.setState({ isHot: !isHot });
+    };
+
+    saveInput = (c) => {
+      this.input1 = c;
+      console.log("@", c);
+    };
+
+    render() {
+      const { isHot } = this.state;
+      return (
+        <div>
+          <h2>今天天气很{isHot ? "炎热" : "凉爽"}</h2>
+          <input ref={this.saveInput} type="text" />
+        </div>
+      );
+    }
+  }
+
+  ReactDOM.render(<Demo />, document.getElementById("test"));
+</script>
+```
+
+### createRef API
+
+该方式通过调用 `React.createRef` 返回一个容器用于存储节点，且一个容器只能存储一个节点。
+
+```html
+<script type="text/babel">
+  class Demo extends React.Component {
+    myRef = React.createRef();
+    myRef2 = React.createRef();
+
+    showData = () => {
+      alert(this.myRef.current.value);
+    };
+
+    showData2 = () => {
+      alert(this.myRef2.current.value);
+    };
+    render() {
+      return (
+        <div>
+          <input ref={this.myRef} type="text" placeholder="点击按钮提示数据" />
+          &nbsp;
+          <button onClick={this.showData}>点我提示左侧的数据</button>&nbsp;
+          <input
+            onBlur={this.showData2}
+            ref={this.myRef2}
+            type="text"
+            placeholder="失去焦点提示数据"
+          />
+          &nbsp;
+        </div>
+      );
+    }
+  }
+
+  ReactDOM.render(<Demo />, document.getElementById("test"));
+</script>
+```
+
+### 事件处理
+
+- React 使用自定义事件，而非原生 DOM 事件，即 `onClick、onBlur` ：为了更好的兼容性
+- React 的事件通过事件委托方式进行处理：为了高效
+- 通过 `event.target` 可获取触发事件的 DOM 元素：勿过度使用 `ref`
+
+当触发事件的元素和需要操作的元素为同一个时，可以不使用 `ref` ：
+
+```js
+class Demo extends React.Component {
+  showData2 = (event) => {
+    alert(event.target.value);
+  };
+
+  render() {
+    return (
+      <div>
+        <input
+          onBlur={this.showData2}
+          type="text"
+          placeholder="失去焦点提示数据"
+        />
+        &nbsp;
+      </div>
+    );
+  }
+}
+```
