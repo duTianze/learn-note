@@ -703,3 +703,172 @@ class Demo extends React.Component {
   }
 }
 ```
+
+## 受控 & 非受控组件
+
+包含表单的组件分类：
+
+- 非受控组件：现用现取。即需要使用时，再获取节点得到数据
+- 受控组件：类似于 Vue 双向绑定的从视图层绑定到数据层
+
+尽量使用受控组件，因为非受控组件需要使用大量的 `ref` 。
+
+```js
+// 非受控组件
+class Login extends React.Component {
+  handleSubmit = (event) => {
+    event.preventDefault();
+    const { username, password } = this;
+    alert(`用户名是：${username.value}, 密码是：${password.value}`);
+  };
+  render() {
+    return (
+      <form onSubmit={this.handleSubmit}>
+        用户名：
+        <input ref={(c) => (this.username = c)} type="text" name="username" />
+        密码：
+        <input
+          ref={(c) => (this.password = c)}
+          type="password"
+          name="password"
+        />
+        <button>登录</button>
+      </form>
+    );
+  }
+}
+```
+
+```js
+// 受控组件
+class Login extends React.Component {
+  state = {
+    username: "",
+    password: "",
+  };
+
+  saveUsername = (event) => {
+    this.setState({ username: event.target.value });
+  };
+
+  savePassword = (event) => {
+    this.setState({ password: event.target.value });
+  };
+
+  handleSubmit = (event) => {
+    event.preventDefault();
+    const { username, password } = this.state;
+    alert(`用户名是：${username}, 密码是：${password}`);
+  };
+
+  render() {
+    return (
+      <form onSubmit={this.handleSubmit}>
+        用户名：
+        <input onChange={this.saveUsername} type="text" name="username" />
+        密码：
+        <input onChange={this.savePassword} type="password" name="password" />
+        <button>登录</button>
+      </form>
+    );
+  }
+}
+```
+
+对上述受控组件的代码进行优化，希望把 `saveUsername` 和 `savePassword` 合并为一个函数。
+
+要点：
+
+- 高阶函数：参数为函数或者返回一个函数的函数，如 `Promise、setTimeout、Array.map()`
+- 函数柯里化：通过函数调用继续返回函数的方式，实现多次接收参数最后统一处理的函数编码形式
+
+```js
+// 函数柯里化
+function sum(a) {
+  return (b) => {
+    return (c) => {
+      return a + b + c;
+    };
+  };
+}
+```
+
+```js
+// 使用高阶函数和柯里化写法
+class Login extends React.Component {
+  state = {
+    username: "",
+    password: "",
+  };
+
+  saveFormData = (dataType) => {
+    return (event) => {
+      this.setState({ [dataType]: event.target.value });
+    };
+  };
+
+  handleSubmit = (event) => {
+    event.preventDefault();
+    const { username, password } = this.state;
+    alert(`用户名是：${username}, 密码是：${password}`);
+  };
+  render() {
+    return (
+      <form onSubmit={this.handleSubmit}>
+        用户名：
+        <input
+          onChange={this.saveFormData("username")}
+          type="text"
+          name="username"
+        />
+        密码：
+        <input
+          onChange={this.saveFormData("password")}
+          type="password"
+          name="password"
+        />
+        <button>登录</button>
+      </form>
+    );
+  }
+}
+```
+
+```js
+// 不使用柯里化写法
+class Login extends React.Component {
+  state = {
+    username: "",
+    password: "",
+  };
+
+  saveFormData = (dataType, event) => {
+    this.setState({ [dataType]: event.target.value });
+  };
+
+  handleSubmit = (event) => {
+    event.preventDefault();
+    const { username, password } = this.state;
+    alert(`用户名是：${username}, 密码是：${password}`);
+  };
+  render() {
+    return (
+      <form onSubmit={this.handleSubmit}>
+        用户名：
+        <input
+          onChange={(event) => this.saveFormData("username", event)}
+          type="text"
+          name="username"
+        />
+        密码：
+        <input
+          onChange={(event) => this.saveFormData("password", event)}
+          type="password"
+          name="password"
+        />
+        <button>登录</button>
+      </form>
+    );
+  }
+}
+```
