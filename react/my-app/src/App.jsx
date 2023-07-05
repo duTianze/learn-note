@@ -20,53 +20,40 @@ class App extends Component {
         this.setState({ todos: newTodos });
     };
 
-    //根据id,修改状态中是否被选中
-    checked = (id, checked) => {
+    updateTodo = (id, done) => {
         const { todos } = this.state;
-        // todos.map((todo)=>{
-        //     if(todo.id == id){
-        //         todo.done = checked;
-        //     }
-        //     return null;
-        // })
-        // this.setState({todos:[...todos]})
-        const newTodo = todos.map((todo) => {
-            if (todo.id === id) {
-                return { ...todo, done: checked };
+        const newTodos = todos.map((todoObj) => {
+            if (todoObj.id === id) {
+                return { ...todoObj, done: done };
+            } else {
+                return todoObj;
             }
-            return todo;
         });
-        this.setState({ todos: newTodo });
+        this.setState({ todos: newTodos });
     };
 
-    //点击删除按钮，删除其中一行
-    deleteById = (id) => {
+    deleteTodo = (id) => {
         const { todos } = this.state;
-        // filter() 方法创建一个新的数组，新数组中的元素是通过检查指定数组中符合条件的所有元素。
-        const newTo = todos.filter((todo) => {
-            return todo.id !== id;
+        const newTodos = todos.filter((todoObj) => {
+            return todoObj.id !== id;
         });
-        this.setState({ todos: newTo });
+        this.setState({ todos: newTodos });
     };
 
-    //全选
-    choseAll = (done) => {
+    checkAllTodo = (done) => {
         const { todos } = this.state;
-
-        const newTo = todos.map((todo) => {
+        const newTodos = todos.map((todo) => {
             return { ...todo, done };
         });
-        this.setState({ todos: [...newTo] });
+        this.setState({ todos: newTodos });
     };
 
-    //删除选中的内容
-    Alldelete = () => {
+    clearAllDone = () => {
         const { todos } = this.state;
-        // filter() 方法创建一个新的数组，新数组中的元素是通过检查指定数组中符合条件的所有元素。
-        const newTo = todos.filter((todo) => {
-            return todo.done !== true;
+        const newTodos = todos.filter((todo) => {
+            return !todo.done;
         });
-        this.setState({ todos: newTo });
+        this.setState({ todos: newTodos });
     };
 
     render() {
@@ -77,13 +64,13 @@ class App extends Component {
                     <Header addTodo={this.addTodo} />
                     <List
                         todos={todos}
-                        show={this.checked}
-                        deleteById={this.deleteById}
+                        updateTodo={this.updateTodo}
+                        deleteTodo={this.deleteTodo}
                     />
                     <Footer
-                        allCheck={this.state}
-                        choseAll={this.choseAll}
-                        Alldelete={this.Alldelete}
+                        todos={todos}
+                        checkAllTodo={this.checkAllTodo}
+                        clearAllDone={this.clearAllDone}
                     />
                 </div>
             </div>
