@@ -62,3 +62,70 @@ module.exports = function (app) {
     );
 };
 ```
+
+## 消息订阅-发布机制
+
+即 React 中兄弟组件或任意组件之间的通信方式。
+
+使用的工具库：[PubSubJS](https://www.npmjs.com/package/pubsub-js)
+
+下载安装 `PubSubJS` ：`npm install pubsub-js --save`
+
+基础用法：
+
+```js
+import PubSub from "pubsub-js";
+
+// 订阅消息
+var token = PubSub.subscribe("topic", (msg, data) => {
+    console.log(msg, data);
+});
+
+// 发布消息
+PubSub.publish("topic", "hello react");
+
+// 取消订阅
+PubSub.unsubscribe(token);
+```
+
+## Github 搜索框案例知识点总结
+
+1. 设计状态时要考虑全面，例如带有网络请求的组件，要考虑请求失败怎么办。
+2. ES6 知识点：解构赋值 + 重命名
+
+```js
+let obj = { a: { b: 1 } };
+
+//传统解构赋值
+const { a } = obj;
+
+//连续解构赋值
+const {
+    a: { b },
+} = obj;
+
+//连续解构赋值 + 重命名
+const {
+    a: { b: value },
+} = obj;
+```
+
+3. 消息订阅与发布机制
+
+-   先订阅，再发布（隔空对话）
+-   适用于任意组件间通信
+-   要在 `componentWillUnmount` 钩子中取消订阅
+
+4. `fetch` 发送请求（**关注分离**的设计思想）
+
+```js
+try {
+    // 先看服务器是否联系得上
+    const response = await fetch(`/api1/search/users2?q=${keyWord}`);
+    // 再获取数据
+    const data = await response.json();
+    console.log(data);
+} catch (error) {
+    console.log("请求出错", error);
+}
+```
