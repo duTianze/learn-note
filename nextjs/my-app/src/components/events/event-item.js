@@ -7,7 +7,7 @@ import classes from "./event-item.module.css";
 const EventItem = (props) => {
     const { title, image, date, location, id } = props;
 
-    const humanReadableDate = new Date(date).toLocaleDateString("jp", {
+    const humanReadableDate = new Date(date).toLocaleDateString("zh-CH", {
         day: "numeric",
         month: "long",
         year: "numeric",
