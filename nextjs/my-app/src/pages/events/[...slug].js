@@ -7,7 +7,7 @@ import ResultsTitle from "../../components/events/results-title";
 import Button from "../../components/ui/button";
 import ErrorAlert from "../../components/ui/error-alert";
 
-function FilteredEventsPage() {
+const FilteredEventsPage = () => {
     const router = useRouter();
 
     const filterData = router.query.slug;
@@ -68,6 +68,6 @@ function FilteredEventsPage() {
             <EventList items={filteredEvents} />
         </Fragment>
     );
-}
+};
 
 export default FilteredEventsPage;
